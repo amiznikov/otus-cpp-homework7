@@ -12,7 +12,7 @@ void replaceLastFourBytes(std::vector<char> &data, uint32_t value) {
   std::copy_n(reinterpret_cast<const char *>(&value), 4, data.begin());
 }
 
-void computeRightCRC32(size_t start, size_t end, const uint32_t& baseCrc32, std::vector<char>& result, const uint32_t &originalCrc32, bool &found) {
+void computeRightCRC32(size_t start, size_t end, const uint32_t baseCrc32, std::vector<char>& result, const uint32_t originalCrc32, bool &found) {
     std::vector<char> modifiedResult = result;
     for (size_t i = start; i < end; ++i) {
       if (found) {
@@ -60,7 +60,7 @@ std::vector<char> hack(const std::vector<char> &original,
     const size_t start = numThreads - 1 == i ? 0 : maxVal - step;
     const size_t end = maxVal;
     maxVal -= step;
-    std::thread t(computeRightCRC32, start, end, std::ref(baseCrc32), std::ref(solt), std::ref(originalCrc32), std::ref(found));
+    std::thread t(computeRightCRC32, start, end, baseCrc32, std::ref(solt), originalCrc32, std::ref(found));
     threads.push_back(std::move(t));
   }
   for (auto &t : threads) {
